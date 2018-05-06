@@ -98,7 +98,7 @@ After getting the platform specific stuff done in previous sections, now downloa
 2. Build the Blink example using the included Makefile
 	
 	```
-	> cd eecs346-msp430dev/mspdebug
+	> cd eecs346-msp430dev/examples/blink
 	> make
 	msp430-elf-gcc -I ~/ti/gcc/include -mmcu=msp430g2553 -O0 -g   -c -o main.o main.c
 	msp430-elf-gcc -I ~/ti/gcc/include -mmcu=msp430g2553 -O0 -g -L ~/ti/gcc/include main.o -o main.out
@@ -125,7 +125,7 @@ After getting the platform specific stuff done in previous sections, now downloa
 6. Now lets build `mspdebug` which is the program we will use to flash programs onto the MSP430.
 
 	```
-	cd eecs346-msp430dev/examples/blink
+	cd eecs346-msp430dev/mspdebug
 	make
 	sudo make install
 	```
