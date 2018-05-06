@@ -2,6 +2,16 @@
 
 This guide gives a brief overview of the Texas Instruments MSP430 and shows how to get simple programs running on the [MSP-EXP430G2 launchpad](http://www.ti.com/tool/MSP-EXP430G2), which is a combined programmer and breakout board for the MSP430
 
+  * [MSP430 Overview](#msp430-overview)
+  * [Development Environment (DevEnv) Setup](#development-environment--devenv--setup)
+    + [Compiling MSP430 Programs](#compiling-msp430-programs)
+    + [OSX Setup](#osx-setup)
+    + [Linux Setup](#linux-setup)
+    + [Windows Setup](#windows-setup)
+    + [Debugging](#debugging)
+  * [Other Resources](#other-resources)
+
+
 ## MSP430 Overview
 The Texas Instruments MSP430 family of ultra-low-power microcontrollers consists of several devices featuring different sets of peripherals targeted for various applications. The architecture, combined with five low-power modes, is optimized to achieve extended battery life in portable measurement applications. The device features a 16-bit RISC CPU, 16-bit registers, and constant generators. The digitally controlled oscillator (DCO) allows wake-up from low-power modes to active mode in less than 1 µs.
 
@@ -43,12 +53,7 @@ The MSP430 von-Neumann architecture has one address space shared with special fu
 
 You will need to setup the development environment and toolchain for MSP430s. First you need to setup the compiler so that you can write C-code that can be compiled and run on an MSP430. Then you will need to setup the interface for the programmer (mspdebug) to load binary files onto your MSP430 device. Some of these steps are platform dependant.  
 
-### Compiling MSP430 Programs
-First, [Download and install the compiler (GCC) for your platform.](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). Use the full version; this requires you get an account and verify you wont use the compliler for bad things (whatever that means). For Mac make sure to right click open, then hold OPTION and open.
-
-Build the Blink example. 
-
-### OSX Setup
+### OSX Specific Setup
 
 1. First make sure you have the Command Line Tools for OSX, install them by opening Terminal if you do not, click through and agree to terms:
 
@@ -67,7 +72,51 @@ xcode-select --install
 
 4. [Now install the CDC drivers](https://github.com/energia/Energia/raw/gh-pages/files/MSP430LPCDC-1.0.3b.zip)
 
-5. Now grab this repository, in Terminal, in a directory where you want the repository to reside:
+### Linux Specific Setup
+1. Download the udev rules: [TI udev rules](http://energia.nu/files/71-ti-permissions.rules)
+
+2. Open a terminal and execute the following command: sudo mv /71-ti-permissions.rules /etc/udev/rules.d/
+
+3. If your Linux distribution supports the service command you can active the new rules with sudo service udev restart. If your Linux distribution does not support this command or if you are not able to upload to the LaunchPad with Energia, then restart your computer to activate the rules.
+
+4. If your board is plugged in, unplug it and plug it back in. Not needed if you rebooted your computer.
+
+### Windows Specific Setup 
+1. You should use the Windows Subsystem for Linux (WSL). [Go through this process and use the Ubuntu distro.](https://docs.microsoft.com/en-us/windows/wsl/install-win10). 
+
+2. Download the LaunchPad drivers for Windows: [LaunchPad CDC drivers zip file for Windows 32 and 64 bit](https://github.com/energia/Energia/raw/gh-pages/files/EZ430-UART.zip)
+
+3. Unzip and double click DPinst.exe for Windows 32bit or DPinst64.exe for Windows 64 bit.
+
+4. Follow the installer instructions (should be one click and done). For Windows 8 and 10 users you may need to disable your signed driver feature, [follow this guide.](https://learn.sparkfun.com/tutorials/disabling-driver-signature-on-windows-8)
+
+### Generic Setup
+After getting the platform specific stuff done in previous sections, now download and install the compiler and build the programmer software. This assumes you already have a terminal window open:
+
+1. First, [Download and install the compiler (GCC) for your platform.](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). Use the full version; this requires you get an account and verify you wont use the compliler for bad things (whatever that means). For Mac make sure to right click open, then hold OPTION and open.
+
+2. Build the Blink example using the included Makefile
+	
+	```
+	> cd eecs346-msp430dev/mspdebug
+	> make
+	msp430-elf-gcc -I ~/ti/gcc/include -mmcu=msp430g2553 -O0 -g   -c -o main.o main.c
+	msp430-elf-gcc -I ~/ti/gcc/include -mmcu=msp430g2553 -O0 -g -L ~/ti/gcc/include main.o -o main.out
+	```
+	
+	Now you should see this when you look at the contents of blink folder:
+	
+	```
+	> ls -lha
+	drwxr-xr-x  6 jhester  staff   192B May  6 14:14 .
+	drwxr-xr-x  3 jhester  staff    96B May  6 13:39 ..
+	-rw-r--r--  1 jhester  staff   532B May  6 14:04 Makefile
+	-rw-r--r--  1 jhester  staff   384B May  6 13:58 main.c
+	-rw-r--r--  1 jhester  staff   6.2K May  6 14:14 main.o
+	-rwxr-xr-x  1 jhester  staff    12K May  6 14:14 main.out
+	```
+
+3. Now grab this repository, in Terminal, in a directory where you want the repository to reside:
 	
 	```
 	git clone git@github.com:jhester/eecs346-msp430dev.git
@@ -116,20 +165,6 @@ xcode-select --install
 	Writing    4 bytes at c2ce [section: .data]...
 	Done, 724 bytes total
 	```
-
-### Linux Setup
-
-### Windows Setup 
-You should use the Windows Subsystem for Linux (WSL). [Go through this process and use the Ubuntu distro.](https://docs.microsoft.com/en-us/windows/wsl/install-win10). 
-
-Download the LaunchPad drivers for Windows: LaunchPad CDC drivers zip file for Windows 32 and 64 bit (alternate mirror: download)
-Unzip and double click DPinst.exe for Windows 32bit or DPinst64.exe for Windows 64 bit.
-Follow the installer instructions (should be one click and done)
-For Windows 8 and 10 users you may need to disable your signed driver feature, follow this guide: https://learn.sparkfun.com/tutorials/disabling-driver-signature-on-windows-8
-
-Once this is done, you will follow the same process as in the Linux setup.
-
-
 
 
 ### Debugging
