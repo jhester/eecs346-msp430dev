@@ -2,14 +2,14 @@
 
 This guide gives a brief overview of the Texas Instruments MSP430 and shows how to get simple programs running on the [MSP-EXP430G2 launchpad](http://www.ti.com/tool/MSP-EXP430G2), which is a combined programmer and breakout board for the MSP430
 
-  * [MSP430 Overview](#msp430-overview)
-  * [Development Environment (DevEnv) Setup](#development-environment--devenv--setup)
-    + [Compiling MSP430 Programs](#compiling-msp430-programs)
-    + [OSX Setup](#osx-setup)
-    + [Linux Setup](#linux-setup)
-    + [Windows Setup](#windows-setup)
-    + [Debugging](#debugging)
-  * [Other Resources](#other-resources)
+  - [MSP430 Overview](#msp430-overview)
+  - [Development Environment (DevEnv) Setup](#development-environment--devenv--setup)
+    * [OSX Specific Setup](#osx-specific-setup)
+    * [Linux Specific Setup](#linux-specific-setup)
+    * [Windows Specific Setup](#windows-specific-setup)
+    * [Generic Setup](#generic-setup)
+    * [Debugging](#debugging)
+  - [Other Resources](#other-resources)
 
 
 ## MSP430 Overview
@@ -125,7 +125,7 @@ After getting the platform specific stuff done in previous sections, now downloa
 6. Now lets build `mspdebug` which is the program we will use to flash programs onto the MSP430.
 
 	```
-	cd eecs346-msp430dev/mspdebug
+	cd eecs346-msp430dev/examples/blink
 	make
 	sudo make install
 	```
