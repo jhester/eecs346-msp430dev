@@ -32,8 +32,9 @@ Key features of the MSP430x2xx family include:
 
 The MSP430 von-Neumann architecture has one address space shared with special function registers (SFRs), peripherals, RAM, and Flash/ROM memory as shown in Figure 1-2. See the device-specific data sheets for specific memory maps. Code access are always performed on even addresses. Data can be accessed as bytes or words.
 
-![MSp430 memory map](media/adress_map.jpeg)
-
+<p align="center">
+<img align="center" src="media/adress_map.jpeg" alt="drawing" style="width: 400px;"/>
+</p>
 
 
 ## Development Environment (DevEnv) Setup
