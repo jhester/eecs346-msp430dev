@@ -27,13 +27,15 @@ Key features of the MSP430x2xx family include:
 - Extensive vectored-interrupt capability
 - In-system programmable Flash permits flexible code changes, field upgrades and data logging
 
+The block diagram is shown below.
+
 ![MSp430 arch](media/func_diagram.jpeg)
 
 
 The MSP430 von-Neumann architecture has one address space shared with special function registers (SFRs), peripherals, RAM, and Flash/ROM memory as shown in Figure 1-2. See the device-specific data sheets for specific memory maps. Code access are always performed on even addresses. Data can be accessed as bytes or words.
 
 <p align="center">
-<img align="center" src="media/adress_map.jpeg" alt="drawing" style="width: 400px;"/>
+<img align="center" src="media/adress_map.jpeg" alt="drawing" style="width: 300px;"/>
 </p>
 
 
@@ -42,23 +44,92 @@ The MSP430 von-Neumann architecture has one address space shared with special fu
 You will need to setup the development environment and toolchain for MSP430s. First you need to setup the compiler so that you can write C-code that can be compiled and run on an MSP430. Then you will need to setup the interface for the programmer (mspdebug) to load binary files onto your MSP430 device. Some of these steps are platform dependant.  
 
 ### Compiling MSP430 Programs
-[Download the compiler (GCC) for your platform.](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html)
+First, [Download and install the compiler (GCC) for your platform.](http://software-dl.ti.com/msp430/msp430_public_sw/mcu/msp430/MSPGCC/latest/index_FDS.html). Use the full version; this requires you get an account and verify you wont use the compliler for bad things (whatever that means). For Mac make sure to right click open, then hold OPTION and open.
 
 Build the Blink example. 
 
 ### OSX Setup
 
-Install drivers for your platform.
+1. First make sure you have the Command Line Tools for OSX, install them by opening Terminal if you do not, click through and agree to terms:
 
-Install mspdebug dependancies, build mspdebug.
+```
+xcode-select --install
+```
 
-Verify mspdebug can access your launchpad.
+2. If you do not already have Homebrew, you should. Homebrew is a package manager for OSX, if you have done any development with OSX you probably have this. [If not install it.](https://brew.sh/)
 
-Flash the Blink example onto your MSP430 Launchpad using mspdebug.
+3. Now install the libusb pacakges, open up Terminal, or iTerm 2 and type in the following:
+
+	```
+	brew install libusb libusb-compat libelf
+	brew upgrade libusb libusb-compat
+	```
+
+4. [Now install the CDC drivers](https://github.com/energia/Energia/raw/gh-pages/files/MSP430LPCDC-1.0.3b.zip)
+
+5. Now grab this repository, in Terminal, in a directory where you want the repository to reside:
+	
+	```
+	git clone git@github.com:jhester/eecs346-msp430dev.git
+	```
+
+6. Now lets build `mspdebug` which is the program we will use to flash programs onto the MSP430.
+
+	```
+	cd eecs346-msp430dev/mspdebug
+	make
+	sudo make install
+	```
+	Note that the last command requires your password and sudo access; this will install the MAN pages for mspdebug as well as put the binary in your path.
+
+7. Now connnect your launchpad via USB to your computer and run mspdebug like below, you should see this output and get a prompt, now you are in the memory space of the MSP430.
+
+	```
+	> mspdebug rf2500                                                        
+	MSPDebug version 0.25 - debugging tool for MSP430 MCUs
+	Copyright (C) 2009-2017 Daniel Beer <dlbeer@gmail.com>
+	This is free software; see the source for copying conditions.  There is NO
+	warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	Chip info database from MSP430.dll v3.12.0.604 Copyright (C) 2013 TI, Inc.
+	
+	...
+	
+	Type "help <topic>" for more information.
+	Use the "opt" command ("help opt") to set options.
+	Press Ctrl+D to quit.
+	
+	(mspdebug) _
+	```
+
+8. Finally, use the Makefile in examples/blink to flash the Blink example onto your MSP430 Launchpad using mspdebug. You should see something like the following and your Launchpad should be blinking its Red LED:
+
+	```
+	> make install
+	msp430-elf-gcc -I ~/ti/gcc/include -mmcu=msp430g2553 -O0 -g -L ~/ti/gcc/include main.o -o main.out
+	mspdebug rf2500 "prog main.out"
+	Device: MSP430G2xx3
+	Erasing...
+	Programming...
+	Writing    2 bytes at fffe [section: __reset_vector]...
+	Writing   12 bytes at c000 [section: .rodata2]...
+	Writing  706 bytes at c00c [section: .text]...
+	Writing    4 bytes at c2ce [section: .data]...
+	Done, 724 bytes total
+	```
 
 ### Linux Setup
 
-### Windows Setup
+### Windows Setup 
+You should use the Windows Subsystem for Linux (WSL). [Go through this process and use the Ubuntu distro.](https://docs.microsoft.com/en-us/windows/wsl/install-win10). 
+
+Download the LaunchPad drivers for Windows: LaunchPad CDC drivers zip file for Windows 32 and 64 bit (alternate mirror: download)
+Unzip and double click DPinst.exe for Windows 32bit or DPinst64.exe for Windows 64 bit.
+Follow the installer instructions (should be one click and done)
+For Windows 8 and 10 users you may need to disable your signed driver feature, follow this guide: https://learn.sparkfun.com/tutorials/disabling-driver-signature-on-windows-8
+
+Once this is done, you will follow the same process as in the Linux setup.
+
+
 
 
 ### Debugging
